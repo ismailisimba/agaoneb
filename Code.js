@@ -45,7 +45,7 @@ const customDateFormater = () =>{
   paraOneVal = paraOneVal.toString();
 
   
-  basicGetResponse["data"] =  getAgaData();
+  basicGetResponse["data"] =  getAgaData(paraOneVal);
   basicGetResponse["paraOneVal"] = paraOneVal;
   
   
@@ -114,12 +114,17 @@ function getAgaShortlist(){
 }
 
 
-function getAgaData(){
+function getAgaData(para){
    const obj = {};
-   obj["shortlist"] = getAgaShortlist();
-   obj["longlist"] = getAgaLonglist();
-   obj["sources"] = getAgaSources()
-   return obj;
+   if(para==="one"){
+      obj["shortlist"] = getAgaShortlist();
+      obj["longlist"] = getAgaLonglist();
+
+   }else if(para==="two"){
+      obj["sources"] = getAgaSources()
+   }
+   
+      return obj;
 }
 
 

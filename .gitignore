@@ -1,0 +1,7 @@
+# Logs
+logs
+.log
+# Dependency directories
+.clasp.json
+# Optional npm cache directory
+.npm

@@ -259,5 +259,7 @@ function getAgaSources(){
 
 
 function updateScreenshot(data){
-return data;
+   const sourcesSheet = agaSheet.getSheetByName("Checklist");
+   sourcesSheet.getRange("K"+data.rowNo).setValue(data.url);
+   return "success";
 }

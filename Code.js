@@ -1,8 +1,6 @@
 const agaURL = "https://docs.google.com/spreadsheets/d/1Aq6EBfSrirS4dIAlCWpn2Li49P4IZsiH3dOSOjC56NI/edit?usp=sharing";
-const agaURl2 = "https://docs.google.com/spreadsheets/d/1RWRkoFeZ637cYX9N-Hjcaerpyl-41xehYuQuyBG3kOE/edit?usp=sharing";
 const agaSheet = SpreadsheetApp.openByUrl(agaURL);
-const agaSourceSheet = SpreadsheetApp.openByUrl(agaURl2);
-const defobj = {"parameters":{"paraOne":"alliancepdf"},"postData":{"contents":JSON.stringify({
+const defobj = {"parameters":{"paraOne":"one"},"postData":{"contents":JSON.stringify({
    "name": "Ismaili Amir Simba",
    "dayOfBirth": "22-02-2023",
    "policyTerm": "25 Years",
@@ -40,12 +38,13 @@ const customDateFormater = () =>{
   
   let paraOneVal = false;
   const basicGetResponse = {};
+  const postData = e.postData.contents;
 
   paraOneVal =  e.parameters.paraOne;
   paraOneVal = paraOneVal.toString();
 
   
-  basicGetResponse["data"] =  getAgaData(paraOneVal);
+  basicGetResponse["data"] =  getAgaData(paraOneVal,postData);
   basicGetResponse["paraOneVal"] = paraOneVal;
   
   
@@ -96,8 +95,9 @@ function getAgaShortlist(){
             copy.gonogo = shortListSheet.getRange("K"+sum).getDisplayValue();
             copy.client = shortListSheet.getRange("L"+sum).getDisplayValue();
             copy.notes = shortListSheet.getRange("M"+sum).getDisplayValue();
-            copy.itemNumber = sum;
-            copy.rangeID = shortListSheet.getRange("A"+sum).getA1Notation()
+            copy.rowNumber = sum;
+            copy.type = "shortlist";
+            copy.rangeID = shortListSheet.getRange("C"+sum+":M"+sum).getA1Notation()
             myArrObj2.push(copy);
 
          }else{
@@ -114,7 +114,7 @@ function getAgaShortlist(){
 }
 
 
-function getAgaData(para){
+function getAgaData(para,data){
    const obj = {};
    if(para==="one"){
       obj["shortlist"] = getAgaShortlist();
@@ -122,6 +122,8 @@ function getAgaData(para){
 
    }else if(para==="two"){
       obj["sources"] = getAgaSources()
+   }else if(para==="three"){
+      obj["updateResponse"] = updateScreenshot(data);
    }
    
       return obj;
@@ -179,8 +181,9 @@ function doGet() {
          copy.gonogo = longListSheet.getRange("L"+sum).getDisplayValue();
          copy.link = longListSheet.getRange("K"+sum).getDisplayValue();
          
-         copy.itemNumber = sum;
-         copy.rangeID = longListSheet.getRange("A"+sum).getA1Notation()
+         copy.rowNumber = sum;
+         copy.type = "longlist";
+         copy.rangeID = longListSheet.getRange("C"+sum+":L"+sum).getA1Notation()
          myArrObj2.push(copy);
 
       }else{
@@ -197,7 +200,7 @@ function doGet() {
 }
 
 function getAgaSources(){
-   const sourcesSheet = agaSourceSheet.getSheetByName("CFPs");
+   const sourcesSheet = agaSheet.getSheetByName("Checklist");
    let lastRow2 = sourcesSheet.getLastRow();
    let firstRow = 5;
    let dif = lastRow2 - firstRow;
@@ -233,9 +236,12 @@ function getAgaSources(){
          copy.link2 = sourcesSheet.getRange("H"+sum).getDisplayValue();
          copy.description = sourcesSheet.getRange("I"+sum).getDisplayValue();
          copy.notes = sourcesSheet.getRange("J"+sum).getDisplayValue();
+         copy.screenshot1 = sourcesSheet.getRange("K"+sum).getDisplayValue();
+         copy.screenshot2 = sourcesSheet.getRange("L"+sum).getDisplayValue();
          
-         copy.itemNumber = sum;
-         copy.rangeID = sourcesSheet.getRange("A"+sum).getA1Notation()
+         copy.rowNumber = sum;
+         copy.type = "source";
+         copy.rangeID = sourcesSheet.getRange("C"+sum+":L"+sum).getA1Notation()
          myArrObj2.push(copy);
 
       }else{
@@ -249,4 +255,9 @@ function getAgaSources(){
   console.log(myArrObj2);
  return myArrObj2;
  
+}
+
+
+function updateScreenshot(data){
+return data;
 }

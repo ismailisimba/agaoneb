@@ -124,6 +124,8 @@ function getAgaData(para,data){
       obj["sources"] = getAgaSources()
    }else if(para==="three"){
       obj["updateResponse"] = updateScreenshot(data);
+   }else if(para==="four"){
+      obj["formSubmitResponse"] = data;
    }
    
       return obj;

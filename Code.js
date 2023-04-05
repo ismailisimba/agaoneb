@@ -125,7 +125,7 @@ function getAgaData(para,data){
    }else if(para==="three"){
       obj["updateResponse"] = updateScreenshot(data);
    }else if(para==="four"){
-      obj["formSubmitResponse"] = data;
+      obj["formSubmitResponse"] = updateByForm(data);
    }
    
       return obj;
@@ -265,4 +265,9 @@ function updateScreenshot(data){
    const reqData = JSON.parse(data);
    sourcesSheet.getRange("K"+reqData.rowNo).setValue(reqData.url);
    return "success";
+}
+
+function updateByForm(data){
+   const reqData = JSON.parse(data);
+   return reqData["0"][0].name
 }

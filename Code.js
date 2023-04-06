@@ -269,5 +269,6 @@ function updateScreenshot(data){
 
 function updateByForm(data){
    const reqData = JSON.parse(data);
+   
    return reqData["0"]
 }

@@ -264,6 +264,7 @@ function updateScreenshot(data){
    const sourcesSheet = agaSheet.getSheetByName("Checklist");
    const reqData = JSON.parse(data);
    sourcesSheet.getRange("K"+reqData.rowNo).setValue(reqData.url);
+   sourcesSheet.getRange("L"+reqData.rowNo).setValue(reqData.res.persDiff);
    return "success";
 }
 

@@ -239,7 +239,7 @@ function getAgaSources(){
          copy.description = sourcesSheet.getRange("I"+sum).getDisplayValue();
          copy.notes = sourcesSheet.getRange("J"+sum).getDisplayValue();
          copy.screenshot1 = sourcesSheet.getRange("K"+sum).getDisplayValue();
-         copy.screenshot2 = sourcesSheet.getRange("L"+sum).getDisplayValue();
+         copy.chanceOfNewOpp = sourcesSheet.getRange("L"+sum).getDisplayValue();
          
          copy.rowNumber = sum;
          copy.type = "source";
@@ -264,7 +264,7 @@ function updateScreenshot(data){
    const sourcesSheet = agaSheet.getSheetByName("Checklist");
    const reqData = JSON.parse(data);
    sourcesSheet.getRange("K"+reqData.rowNo).setValue(reqData.url);
-   sourcesSheet.getRange("L"+reqData.rowNo).setValue(reqData.res.persDiff);
+   sourcesSheet.getRange("L"+reqData.rowNo).setValue(reqData.res.percDiff);
    return "success";
 }
 

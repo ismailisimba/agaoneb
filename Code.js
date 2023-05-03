@@ -1,20 +1,9 @@
 const agaURL = "https://docs.google.com/spreadsheets/d/1Aq6EBfSrirS4dIAlCWpn2Li49P4IZsiH3dOSOjC56NI/edit?usp=sharing";
 const agaSheet = SpreadsheetApp.openByUrl(agaURL);
-const defobj = {"parameters":{"paraOne":"one"},"postData":{"contents":JSON.stringify({
-   "name": "Ismaili Amir Simba",
-   "dayOfBirth": "22-02-2023",
-   "policyTerm": "25 Years",
-   "age": "29",
-   "sumInsured": "1,000,000",
-   "premium": "1,000,000",
-   "totalpremium": "1,000,000",
-   "revbonus": "1,000,000",
-   "termbonus": "1,000,000",
-   "totalmatval": "1,000,000",
-   "cashback": "1,000,000",
-   "cashbackStatus":"cashback",
-   "planType":"greee"
- })}};
+const clientSheet = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1cKnCQYqQh1JxaCtb0Rd6L26N_oLz93jO3jofl2JdSOU/edit?usp=sharing");
+const defobj = {"parameters":{"paraOne":"five"},"postData":{"contents":JSON.stringify(
+   {"orgname":"Testing One two three","faddress":"Tabata Relini 11567","regnum":"1CD456888","bdate":"2020-12-21","contperson":"James Madison","contdetails":"+255678123467","sectorop":"Building and Construction","contryops":"Tanzania, Kenya, Uganda","descrofactiv":"Construction","numemployees":"1000","turnover":"1000$, $55000, 100000$","primaincome":"Fees","prevgrantlist":"None","propoideas":"Nbb, Nbb","otherinfo":" bbbhv j","regcerts":{"fileSize":100000,"fileName":"Budget.png","fileMime":"image/png","fileSrc":"regcerts","fileDataB64":"iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"}}
+)}};
 
 const customDateFormater = () =>{
    Date.prototype.toDateInputValue = (function() {
@@ -126,6 +115,8 @@ function getAgaData(para,data){
       obj["updateResponse"] = updateScreenshot(data);
    }else if(para==="four"){
       obj["formSubmitResponse"] = updateByForm(data);
+   }else if(para==="five"){
+      obj["formSubmitResponse"] = onboardByForm(data);
    }
    
       return obj;
@@ -272,4 +263,53 @@ function updateByForm(data){
    const reqData = JSON.parse(data);
    
    return reqData["0"]
+}
+
+
+function onboardByForm(data){
+   const reqData = JSON.parse(data);
+   const clients = clientSheet.getSheetByName("Sheet 1");
+   const date = customDateFormater();
+
+
+   reqData.regcerts.downLink = uploadClientFile(reqData.regcerts,date,reqData.orgname)
+   reqData.taxcerts.downLink = uploadClientFile(reqData.taxcerts,date,reqData.orgname)
+   reqData.auditedfin.downLink = uploadClientFile(reqData.auditedfin,date,reqData.orgname)
+   reqData.busprofdoc.downLink =uploadClientFile(reqData.busprofdoc,date,reqData.orgname)
+   reqData.prevsubfiles.downLink =uploadClientFile(reqData.prevsubfiles,date,reqData.orgname)
+
+   clients.appendRow([
+      reqData.orgname,
+      reqData.faddress,
+      reqData.regnum,
+      reqData.bdate,
+      reqData.contperson,
+      reqData.contdetails,
+      reqData.sectorop,
+      reqData.contryops,
+      reqData.descrofactiv,
+      reqData.numemployees,
+      reqData.turnover,
+      reqData.primaincome,
+      reqData.prevgrantlist,
+      reqData.propoideas,
+      reqData.otherinfo,
+      reqData.regcerts.downLink,
+      reqData.taxcerts.downLink,
+      reqData.auditedfin.downLink,
+      reqData.busprofdoc.downLink,
+      reqData.prevsubfiles.downLink
+   ]);
+   return reqData;
+}
+
+
+function uploadClientFile (file,date,orgname){
+   const data = Utilities.base64Decode(file.fileDataB64.split(",")[1]);
+   const blob = Utilities.newBlob(data,file.fileMime,file.fileName);
+   const momFolder = DriveApp.getFolderById("1ez-kvM6Y_k2xViJFmXb_nQ5czI1bDU_N");
+   const clientFolder = momFolder.createFolder(orgname+"_"+date.year+date.month+date.day+date.hour+date.minute+date.second.replaceAll(".","_"));
+   const uploadedFile = clientFolder.createFile(blob);
+   const downLink = uploadedFile.getDownloadUrl();
+   return downLink;
 }
